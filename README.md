@@ -1,3 +1,12 @@
+My customised chrome extension version of Tilde, which I've been using as my new tab page.
+
+...\
+<sub>
+Archiving this here since chrome's gonna stop supporting manifest v2 soon, breaking some (optional) parts of this extension
+</sub>
+---
+
+
 # Tilde
 
 Inspired by [r/startpages](https://www.reddit.com/r/startpages)&mdash;the idea
@@ -34,17 +43,16 @@ This is how you can use Tilde out of the box, but it&rsquo;s
 
 - Entering `r/r/startpages` will redirect you to
   [r/startpages](https://www.reddit.com/r/startpages).
-- Entering `h/popular` will redirect you to
+- Entering `j/popular` will redirect you to
   [hypem.com/popular](http://hypem.com/popular).
 
 #### Other Sites
 
 - Entering `stallman.org` will redirect you to
   [stallman.org](http://stallman.org/).
-- Entering `https://xvvvyz.xyz` will redirect you to
-  [xvvvyz.xyz](https://xvvvyz.xyz).
+- Entering `https://cade.me` will redirect you to [cade.me](https://cade.me).
 
 ## License
 
 Thank you for reading! Feel free to use and modify Tilde
-[as you see fit](UNLICENSE).
+[as you see fit](LICENSE).
