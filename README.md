@@ -5,7 +5,7 @@ My customised chrome extension version of Tilde, which I've been using as my new
 Archiving this here since chrome's gonna stop supporting manifest v2 soon, breaking some (optional) parts of this extension
 </sub>
 
-Go to [manifest-v3](https://github.com/hH-13/tilde-arch/tree/manifest-v3) for the, y'know, manifest-v3 version
+Go to [manifest-v3](https://github.com/hH-13/tilde-arch/tree/manifest-v2) for the, y'know, manifest-v2 version
 ---
 
 
