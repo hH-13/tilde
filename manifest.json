@@ -1,7 +1,7 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Tilde",
-    "version": "1.3",
+    "version": "2",
     "description": "newtab",
     "chrome_url_overrides": {
         "newtab": "index.html"
@@ -13,5 +13,34 @@
         "128": "icons/icon128.png",
         "512": "icons/icon512.png"
     },
-    "content_security_policy": "script-src 'self'; object-src 'self'; script-src-elem 'self' 'unsafe-inline' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/;"
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/",
+        "sandbox_pages": "default-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "config.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },
+        {
+            "resources": [
+                "script.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },
+        {
+            "resources": [
+                "style.css"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
 }

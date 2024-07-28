@@ -106,7 +106,7 @@ const CONFIG = {
     suggestionInfluencers: [
         { name: 'Default', limit: 4 },
         { name: 'History', limit: 4, minChars: 1 },
-        { name: 'DuckDuckGo', limit: 6, minChars: 1 },
+        // { name: 'DuckDuckGo', limit: 6, minChars: 1 },
     ],
 
     /**
