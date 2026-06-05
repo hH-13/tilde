@@ -180,26 +180,35 @@ class DuckDuckGoInfluencer extends Influencer {
         super(...arguments);
     }
 
-    getSuggestions(parsedQuery) {
+    async getSuggestions(parsedQuery) {
         const { lower, query } = parsedQuery;
         if (this.isTooShort(query)) return Promise.resolve([]);
 
-        return new Promise((resolve) => {
-            window.autocompleteCallback = (res) =>
-                resolve(
-                    Influencer.addSearchPrefix(
-                        res
-                            .map((s) => s.phrase)
-                            .filter((s) => s.toLowerCase() !== lower)
-                            .slice(0, this.limit),
-                        parsedQuery
-                    )
+            try {
+                const response = await fetch(
+                    `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
+                    {
+                        method: 'GET',
+                        credentials: 'omit',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    }
                 );
 
-            const script = document.createElement('script');
-            script.src = `https://duckduckgo.com/ac/?callback=autocompleteCallback&q=${query}`;
-            $.el('head').appendChild(script);
-        });
+                if (!response.ok) return [];
+                const results = await response.json();
+
+                return Influencer.addSearchPrefix(
+                    results
+                        .map((s) => s.phrase)
+                        .filter((s) => s.toLowerCase() !== lower)
+                        .slice(0, this.limit),
+                    parsedQuery
+            );
+        } catch (error) {
+            return [];
+        }
     }
 }
 

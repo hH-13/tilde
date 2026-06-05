@@ -14,9 +14,12 @@
         "512": "icons/icon512.png"
     },
     "content_security_policy": {
-        "extension_pages": "script-src 'self'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/",
-        "sandbox_pages": "default-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/"
+        "extension_pages": "script-src 'self'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/; connect-src 'self' https://duckduckgo.com",
+        "sandbox_pages": "default-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://duckduckgo.com/ http://suggestqueries.google.com/ http://google.com/; connect-src 'self' https://duckduckgo.com"
     },
+    "host_permissions": [
+        "https://duckduckgo.com/*"
+    ],
     "web_accessible_resources": [
         {
             "resources": [
