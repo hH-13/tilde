@@ -597,7 +597,7 @@ class QueryParser {
         if (!searchPath) return url;
         const baseUrl = QueryParser.#stripUrlPath(url);
         const urlQuery = encodeURIComponent(query);
-        searchPath = searchPath.replace(/{}/g, urlQuery);
+        searchPath = searchPath.replace(/\{\s*\}/g, urlQuery);
         return baseUrl + searchPath;
     }
 
