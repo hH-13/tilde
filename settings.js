@@ -471,6 +471,7 @@ globalThis.TildeSettings = (() => {
     class SettingsPanel {
         #activeTab = 'appearance';
         #el = null;
+        #resetPending = false;
         #settings = null;
         #store = null;
 
@@ -547,6 +548,7 @@ globalThis.TildeSettings = (() => {
 
         #handleSubmit = (event) => {
             event.preventDefault();
+            this.#clearResetConfirmation();
             this.#save();
         };
 
@@ -554,9 +556,11 @@ globalThis.TildeSettings = (() => {
             const action = button.dataset.settingsAction;
             const index = Number(button.dataset.index);
 
+            if (action !== 'reset') this.#clearResetConfirmation();
+
             if (action === 'close') this.hide();
             if (action === 'tab') this.#setTab(button.dataset.settingsTab);
-            if (action === 'reset') this.#reset();
+            if (action === 'reset') this.#reset(button);
             if (action === 'export') this.#export();
             if (action === 'import') this.#import();
             if (action === 'add-command') this.#addCommand();
@@ -595,10 +599,37 @@ globalThis.TildeSettings = (() => {
             }
         }
 
-        #reset() {
-            if (!globalThis.confirm('Reset local settings?')) return;
+        #reset(button) {
+            if (!this.#resetPending) {
+                this.#resetPending = true;
+                button.textContent = 'Confirm Reset';
+                button.classList.add('settings-danger');
+                this.#setStatus(['Click Confirm Reset to discard local settings.']);
+                return;
+            }
+
             this.#store.reset();
             globalThis.location.reload();
+        }
+
+        #clearResetConfirmation() {
+            if (!this.#resetPending) return;
+
+            this.#resetPending = false;
+            const button = qs('[data-settings-action="reset"]', this.#el);
+
+            if (button) {
+                button.textContent = 'Reset';
+                button.classList.remove('settings-danger');
+            }
+
+            const status = qs('#settings-status', this.#el);
+            if (
+                status &&
+                status.textContent === 'Click Confirm Reset to discard local settings.'
+            ) {
+                status.textContent = '';
+            }
         }
 
         #export() {
@@ -1007,9 +1038,9 @@ globalThis.TildeSettings = (() => {
                         <input name="command-color" value="${escapeHtml(command.color)}" />
                     </label>
                     <div class="settings-row-actions">
-                        <button type="button" class="settings-button" data-settings-action="move-command-up" data-index="${index}">Up</button>
-                        <button type="button" class="settings-button" data-settings-action="move-command-down" data-index="${index}">Down</button>
-                        <button type="button" class="settings-button" data-settings-action="remove-command" data-index="${index}">Remove</button>
+                        <button type="button" class="settings-button" data-settings-action="move-command-up" data-index="${index}" aria-label="Move command up" title="Move up">&uarr;</button>
+                        <button type="button" class="settings-button" data-settings-action="move-command-down" data-index="${index}" aria-label="Move command down" title="Move down">&darr;</button>
+                        <button type="button" class="settings-button" data-settings-action="remove-command" data-index="${index}" aria-label="Remove command" title="Remove">&times;</button>
                     </div>
                 </div>
             `;
@@ -1127,9 +1158,9 @@ globalThis.TildeSettings = (() => {
                         <input min="0" name="influencer-min-chars" type="number" value="${escapeHtml(influencer.minChars)}" />
                     </label>
                     <div class="settings-row-actions">
-                        <button type="button" class="settings-button" data-settings-action="move-influencer-up" data-index="${index}">Up</button>
-                        <button type="button" class="settings-button" data-settings-action="move-influencer-down" data-index="${index}">Down</button>
-                        <button type="button" class="settings-button" data-settings-action="remove-influencer" data-index="${index}">Remove</button>
+                        <button type="button" class="settings-button" data-settings-action="move-influencer-up" data-index="${index}" aria-label="Move influencer up" title="Move up">&uarr;</button>
+                        <button type="button" class="settings-button" data-settings-action="move-influencer-down" data-index="${index}" aria-label="Move influencer down" title="Move down">&darr;</button>
+                        <button type="button" class="settings-button" data-settings-action="remove-influencer" data-index="${index}" aria-label="Remove influencer" title="Remove">&times;</button>
                     </div>
                 </div>
             `;
@@ -1137,7 +1168,7 @@ globalThis.TildeSettings = (() => {
 
         #renderDefaultSuggestionRow(row, index) {
             return `
-                <div class="settings-list-row settings-list-row-wide" data-default-suggestion-row>
+                <div class="settings-list-row settings-list-row-wide settings-text-row" data-default-suggestion-row>
                     <label>
                         Key
                         <input name="default-suggestion-key" value="${escapeHtml(row.key)}" />
@@ -1147,7 +1178,7 @@ globalThis.TildeSettings = (() => {
                         <textarea name="default-suggestions" rows="4">${escapeHtml(formatListText(row.suggestions))}</textarea>
                     </label>
                     <div class="settings-row-actions">
-                        <button type="button" class="settings-button" data-settings-action="remove-default-suggestion" data-index="${index}">Remove</button>
+                        <button type="button" class="settings-button" data-settings-action="remove-default-suggestion" data-index="${index}" aria-label="Remove default suggestion" title="Remove">&times;</button>
                     </div>
                 </div>
             `;
@@ -1177,7 +1208,7 @@ globalThis.TildeSettings = (() => {
 
         #renderScriptRow(row, index) {
             return `
-                <div class="settings-list-row settings-list-row-wide" data-script-row>
+                <div class="settings-list-row settings-list-row-wide settings-text-row" data-script-row>
                     <label>
                         Key
                         <input name="script-key" value="${escapeHtml(row.key)}" />
@@ -1187,7 +1218,7 @@ globalThis.TildeSettings = (() => {
                         <textarea name="script-commands" rows="4">${escapeHtml(formatListText(row.commands))}</textarea>
                     </label>
                     <div class="settings-row-actions">
-                        <button type="button" class="settings-button" data-settings-action="remove-script" data-index="${index}">Remove</button>
+                        <button type="button" class="settings-button" data-settings-action="remove-script" data-index="${index}" aria-label="Remove script" title="Remove">&times;</button>
                     </div>
                 </div>
             `;
