@@ -634,6 +634,7 @@ class Form {
 
     #helpKey = '?';
     #instantRedirect = false;
+    #suppressNextInstantRedirect = false;
     #toggleHelp = () => { };
     #inputValue = '';
     #suggester;
@@ -655,6 +656,7 @@ class Form {
         $.bodyClassRemove(Form.#CL_FORM);
         Form.#EL_FORM.value = '';
         this.#inputValue = '';
+        this.#suppressNextInstantRedirect = false;
         this.#suggester.suggest('');
         this.#setColorsFromQuery('');
     }
@@ -680,7 +682,14 @@ class Form {
         if (!newQuery || isHelp) this.hide();
         if (isHelp) this.#toggleHelp();
 
-        if (this.#instantRedirect && parsedQuery.isKey) {
+        const suppressInstantRedirect = this.#suppressNextInstantRedirect;
+        this.#suppressNextInstantRedirect = false;
+
+        if (
+            this.#instantRedirect &&
+            parsedQuery.isKey &&
+            !suppressInstantRedirect
+        ) {
             this.#submitWithValue(newQuery);
         }
     };
@@ -702,6 +711,13 @@ class Form {
         if ($.isEscape(e)) {
             this.hide();
             return;
+        }
+
+        if (
+            !document.body.classList.contains(Form.#CL_FORM) &&
+            e.key.length === 1
+        ) {
+            this.#suppressNextInstantRedirect = true;
         }
 
         this.show();
