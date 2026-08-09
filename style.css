@@ -313,3 +313,293 @@
   .search-suggestion-match {
       font-weight: var(--base-font-weight-normal);
   }
+
+  /* settings */
+
+  body.density-compact {
+      --clock-font-size: 2.5rem;
+      --command-height: 3.25rem;
+      --help-grid-gap: 0.5rem;
+      --search-input-font-size: 1.5rem;
+      --suggestion-height: 2.25rem;
+  }
+
+  body.density-spacious {
+      --clock-font-size: 3.75rem;
+      --command-height: 5rem;
+      --help-grid-gap: 1.5rem;
+      --search-input-font-size: 2.5rem;
+      --suggestion-height: 3.5rem;
+  }
+
+  @media (min-width: 600px) {
+      body.density-compact {
+          --clock-font-size: 4rem;
+      }
+
+      body.density-spacious {
+          --clock-font-size: 6rem;
+      }
+  }
+
+  @media (min-width: 900px) {
+      body.density-compact {
+          --clock-font-size: 5.75rem;
+          --search-input-font-size: 2.25rem;
+      }
+
+      body.density-spacious {
+          --clock-font-size: 8.25rem;
+          --search-input-font-size: 3.75rem;
+      }
+  }
+
+  .settings {
+      background: var(--base-background);
+      padding: 0;
+      visibility: hidden;
+      z-index: 3;
+  }
+
+  body.settings {
+      overflow: hidden;
+  }
+
+  body.settings .settings {
+      visibility: visible;
+  }
+
+  body.settings .help,
+  body.settings .search-form {
+      visibility: hidden;
+  }
+
+  .settings-panel {
+      width: min(100%, 88rem);
+      margin: 0 auto;
+      padding: 1.25rem;
+  }
+
+  .settings-header,
+  .settings-footer {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: space-between;
+  }
+
+  .settings-header {
+      position: sticky;
+      top: 0;
+      background: var(--base-background);
+      padding: 0.75rem 0;
+      z-index: 1;
+  }
+
+  .settings-header h1,
+  .settings-section h2,
+  .settings-section h3 {
+      margin: 0;
+      line-height: 1.2;
+  }
+
+  .settings-header h1 {
+      font-size: 1.5rem;
+      font-weight: var(--base-font-weight-black);
+  }
+
+  .settings-section h2 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+  }
+
+  .settings-section h3 {
+      margin: 1.5rem 0 0.75rem;
+      font-size: 1rem;
+      font-weight: var(--base-font-weight-bold);
+  }
+
+  .settings-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1rem 0 1.25rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+  }
+
+  .settings-tab,
+  .settings-button {
+      width: auto;
+      border: 1px solid rgba(127, 127, 127, 0.45);
+      border-radius: var(--base-border-radius);
+      cursor: pointer;
+      font-weight: var(--base-font-weight-bold);
+      line-height: 1;
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+  }
+
+  .settings-tab.active,
+  .settings-button:hover,
+  .settings-primary {
+      background: var(--base-foreground);
+      color: var(--base-background);
+  }
+
+  .settings-section {
+      display: none;
+      padding-bottom: 2rem;
+  }
+
+  .settings-section.active {
+      display: block;
+  }
+
+  .settings label {
+      display: grid;
+      gap: 0.4rem;
+      min-width: 0;
+      font-size: 0.8rem;
+      font-weight: var(--base-font-weight-bold);
+      text-transform: uppercase;
+  }
+
+  .settings input,
+  .settings select,
+  .settings textarea {
+      width: 100%;
+      border: 1px solid rgba(127, 127, 127, 0.45);
+      border-radius: var(--base-border-radius);
+      background: var(--help-command-background);
+      color: var(--base-foreground);
+      font-family: var(--base-font-family);
+      font-size: 1rem;
+      font-weight: var(--base-font-weight-normal);
+      line-height: 1.35;
+      padding: 0.7rem 0.8rem;
+  }
+
+  .settings input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+  }
+
+  .settings textarea {
+      min-height: 6rem;
+      resize: vertical;
+  }
+
+  .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      gap: 1rem;
+  }
+
+  .settings-grid-small {
+      grid-template-columns: repeat(auto-fit, minmax(8rem, 14rem));
+  }
+
+  .settings-checks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+  }
+
+  .settings-checks label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-transform: none;
+  }
+
+  .settings-command-list,
+  .settings-stack {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+  }
+
+  .settings-command-row,
+  .settings-list-row {
+      display: grid;
+      align-items: end;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(127, 127, 127, 0.25);
+  }
+
+  .settings-command-row {
+      grid-template-columns:
+          minmax(4rem, 0.55fr)
+          minmax(8rem, 0.9fr)
+          minmax(14rem, 1.7fr)
+          minmax(10rem, 1.2fr)
+          minmax(7rem, 0.8fr)
+          minmax(7rem, 0.8fr)
+          auto;
+  }
+
+  .settings-list-row {
+      grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1fr) minmax(8rem, 1fr) auto;
+  }
+
+  .settings-list-row-wide {
+      grid-template-columns: minmax(8rem, 0.5fr) minmax(18rem, 1.5fr) auto;
+  }
+
+  .settings-row-actions,
+  .settings-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+  }
+
+  .settings-row-actions {
+      justify-content: flex-end;
+  }
+
+  .settings-row-actions .settings-button,
+  .settings-actions .settings-button {
+      padding: 0.65rem 0.75rem;
+  }
+
+  .settings-footer {
+      position: sticky;
+      bottom: 0;
+      background: var(--base-background);
+      border-top: 1px solid rgba(127, 127, 127, 0.25);
+      margin-top: 2rem;
+      padding: 1rem 0;
+  }
+
+  .settings-status {
+      flex: 1;
+      min-height: 1.25rem;
+      white-space: pre-line;
+  }
+
+  .settings-status-error {
+      color: #ff8a8a;
+  }
+
+  .settings-status-success {
+      color: #89d185;
+  }
+
+  @media (max-width: 900px) {
+      .settings-command-row,
+      .settings-list-row,
+      .settings-list-row-wide {
+          grid-template-columns: 1fr;
+      }
+
+      .settings-row-actions {
+          justify-content: flex-start;
+      }
+
+      .settings-footer {
+          align-items: stretch;
+          flex-direction: column;
+      }
+  }

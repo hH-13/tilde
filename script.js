@@ -11,6 +11,7 @@ const $ = {
     isEscape: (e) => /^Escape$/.test(e.key),
     isModifier: (e) => /^(Alt|Control|Enter|Meta|Shift)$/.test(e.key),
     isRemove: (e) => /^(Backspace|Delete)$/.test(e.key),
+    isSettingsOpen: () => $.el('body').classList.contains('settings'),
     isUp: (e) => /^(ArrowUp|c-p|s-Tab)$/.test($.prefix(e) + e.key),
     prefix: (e) => (e.ctrlKey ? 'c-' : '') + (e.shiftKey ? 's-' : ''),
 };
@@ -125,6 +126,7 @@ class Help {
     }
 
     #handleKeydown = (e) => {
+        if ($.isSettingsOpen()) return;
         if ($.isEscape(e)) this.toggle(false);
     };
 
@@ -206,7 +208,7 @@ class DuckDuckGoInfluencer extends Influencer {
                         .slice(0, this.limit),
                     parsedQuery
             );
-        } catch (error) {
+        } catch (_error) {
             return [];
         }
     }
@@ -406,6 +408,7 @@ class Suggester {
     }
 
     #handleKeydown = (e) => {
+        if ($.isSettingsOpen()) return;
         if ($.isDown(e)) this.#focusNext(e);
         if ($.isUp(e)) this.#focusPrevious(e);
     };
@@ -439,7 +442,7 @@ class Suggester {
 
     #registerSuggestionHighlightEvents() {
         const noHighlightUntilMouseMove = () => {
-            window.removeEventListener('mousemove', noHighlightUntilMouseMove);
+            globalThis.removeEventListener('mousemove', noHighlightUntilMouseMove);
 
             this.#suggestionEls.forEach((el) => {
                 el.addEventListener('mouseover', () => this.#highlightSuggestion(el));
@@ -447,7 +450,7 @@ class Suggester {
             });
         };
 
-        window.addEventListener('mousemove', noHighlightUntilMouseMove);
+        globalThis.addEventListener('mousemove', noHighlightUntilMouseMove);
     }
 
     #rehighlightSuggestion() {
@@ -657,6 +660,7 @@ class Form {
     }
 
     show() {
+        if ($.isSettingsOpen()) return;
         $.bodyClassAdd(Form.#CL_FORM);
         Form.#EL_FORM.focus();
     }
@@ -682,6 +686,8 @@ class Form {
     };
 
     #handleKeydown = (e) => {
+        if ($.isSettingsOpen()) return;
+
         if (
             $.isDown(e) ||
             $.isModifier(e) ||
@@ -702,7 +708,7 @@ class Form {
     };
 
     #loadQueryParam() {
-        const q = new URLSearchParams(window.location.search).get(
+        const q = new URLSearchParams(globalThis.location.search).get(
             Form.#URL_PARAM_Q
         );
 
@@ -716,9 +722,9 @@ class Form {
 
     #redirect(redirect, forceNewTab) {
         if (this.#newTab || forceNewTab) {
-            window.open(redirect, '_blank', 'noopener noreferrer');
+            globalThis.open(redirect, '_blank', 'noopener noreferrer');
         } else {
-            window.location.href = redirect;
+            globalThis.location.href = redirect;
         }
     }
 
@@ -774,9 +780,10 @@ class CommandFormatter {
 
     static format(commands) {
         return commands.map((command) => {
-            if (command.color || !command.name) return command;
-            command.color = CommandFormatter.#huesToGradient(command.hues);
-            return command;
+            const formatted = { ...command };
+            if (formatted.color || !formatted.name) return formatted;
+            formatted.color = CommandFormatter.#huesToGradient(formatted.hues);
+            return formatted;
         });
     }
 
@@ -803,22 +810,37 @@ class CommandFormatter {
 }
 
 (() => {
-    $.bodyClassAdd(CONFIG.theme);
-    const commands = CommandFormatter.format(CONFIG.commands);
-    const help = new Help({ commands, newTab: CONFIG.queryNewTab });
+    const settingsStore = globalThis.TildeSettings?.createStore(CONFIG);
+    const settings = settingsStore?.load();
+    const runtimeConfig = settingsStore
+        ? settingsStore.toRuntimeConfig(settings)
+        : CONFIG;
+
+    if (globalThis.TildeSettings && settings) {
+        globalThis.TildeSettings.applyBodyClasses(settings);
+        new globalThis.TildeSettings.SettingsPanel({
+            settings,
+            store: settingsStore,
+        });
+    } else {
+        $.bodyClassAdd(CONFIG.theme);
+    }
+
+    const commands = CommandFormatter.format(runtimeConfig.commands);
+    const help = new Help({ commands, newTab: runtimeConfig.queryNewTab });
 
     const form = new Form({
-        helpKey: CONFIG.helpKey,
-        instantRedirect: CONFIG.queryInstantRedirect,
-        newTab: CONFIG.queryNewTab,
+        helpKey: runtimeConfig.helpKey,
+        instantRedirect: runtimeConfig.queryInstantRedirect,
+        newTab: runtimeConfig.queryNewTab,
         parseQuery: new QueryParser({
             commands,
-            pathDelimiter: CONFIG.queryPathDelimiter,
-            scripts: CONFIG.scripts,
-            searchDelimiter: CONFIG.querySearchDelimiter,
+            pathDelimiter: runtimeConfig.queryPathDelimiter,
+            scripts: runtimeConfig.scripts,
+            searchDelimiter: runtimeConfig.querySearchDelimiter,
         }).parse,
         suggester: new Suggester({
-            influencers: CONFIG.suggestionInfluencers.map(
+            influencers: runtimeConfig.suggestionInfluencers.map(
                 (influencerConfig) =>
                     new {
                         Default: DefaultInfluencer,
@@ -827,20 +849,21 @@ class CommandFormatter {
                     }[influencerConfig.name]({
                         limit: influencerConfig.limit,
                         minChars: influencerConfig.minChars,
-                        suggestionDefaults: CONFIG.suggestionDefaults,
+                        suggestionDefaults: runtimeConfig.suggestionDefaults,
                     })
             ),
-            limit: CONFIG.suggestionLimit,
+            limit: runtimeConfig.suggestionLimit,
         }),
         toggleHelp: help.toggle,
     });
 
     new Clock({
-        amPm: CONFIG.clockShowAmPm,
-        delimiter: CONFIG.clockDelimiter,
-        onClick: CONFIG.clockOnClickAction === 'Search' ? form.show : help.toggle,
-        showSeconds: CONFIG.clockShowSeconds,
-        timeZone: CONFIG.clockTimeZone,
-        twentyFourHour: CONFIG.clockTwentyFourHour,
+        amPm: runtimeConfig.clockShowAmPm,
+        delimiter: runtimeConfig.clockDelimiter,
+        onClick:
+            runtimeConfig.clockOnClickAction === 'Search' ? form.show : help.toggle,
+        showSeconds: runtimeConfig.clockShowSeconds,
+        timeZone: runtimeConfig.clockTimeZone,
+        twentyFourHour: runtimeConfig.clockTwentyFourHour,
     });
 })();

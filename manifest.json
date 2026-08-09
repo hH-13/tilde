@@ -39,6 +39,14 @@
         },
         {
             "resources": [
+                "settings.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        },
+        {
+            "resources": [
                 "style.css"
             ],
             "matches": [

@@ -118,7 +118,7 @@ const CONFIG = {
      * Default search suggestions for the specified queries.
      */
     suggestionDefaults: {
-        g: ['g/FallenDeity/code-jam-2024', 'g/hH-13/unnecessary-c-scripts', 'g/hH-13/jobs-scraper', 'g/inkontoasty/the-neverending-loops', 'g/hH-13/tilde', 'g/hH-13/snow-wise', 'g/hH-13/mischevious-mummies', 'g/hH-13/FM-CRS-90.8MHz', 'g/yagueto/code-jam-2021'],
+        g: ['g/FallenDeity/code-jam-2024', 'g/hH-13/unnecessary-c-scripts', 'g/hH-13/jobs-scraper', 'g/inkontoasty/the-neverending-loops', 'g/hH-13/tilde', 'g/hH-13/snow-wise', 'g/hH-13/mischevious-mummies', 'g/hH-13/FM-CRS-90.8MHz'],
         i: ['inbox.google.com/'],
         c: ['c/events'],
         l: ['l/editor', 'l/paste'],
