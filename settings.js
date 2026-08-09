@@ -604,7 +604,6 @@ globalThis.TildeSettings = (() => {
                 this.#resetPending = true;
                 button.textContent = 'Confirm Reset';
                 button.classList.add('settings-danger');
-                this.#setStatus(['Click Confirm Reset to discard local settings.']);
                 return;
             }
 
@@ -623,13 +622,6 @@ globalThis.TildeSettings = (() => {
                 button.classList.remove('settings-danger');
             }
 
-            const status = qs('#settings-status', this.#el);
-            if (
-                status &&
-                status.textContent === 'Click Confirm Reset to discard local settings.'
-            ) {
-                status.textContent = '';
-            }
         }
 
         #export() {
@@ -889,7 +881,6 @@ globalThis.TildeSettings = (() => {
                 <div class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
                     <header class="settings-header">
                         <h1 id="settings-title">Settings</h1>
-                        <button type="button" class="settings-button" data-settings-action="close">Close</button>
                     </header>
                     <form id="settings-form" class="settings-form">
                         <nav class="settings-tabs" aria-label="Settings sections">
@@ -902,9 +893,10 @@ globalThis.TildeSettings = (() => {
                         ${this.#renderSuggestionsSection(defaultSuggestionRows)}
                         ${this.#renderDataSection(scriptRows)}
                         <footer class="settings-footer">
-                            <button type="submit" class="settings-button settings-primary">Save</button>
+                            <button type="submit" class="settings-button">Save</button>
                             <button type="button" class="settings-button" data-settings-action="reset">Reset</button>
                             <div aria-live="polite" class="settings-status" id="settings-status"></div>
+                            <button type="button" class="settings-button" data-settings-action="close">Close</button>
                         </footer>
                     </form>
                 </div>

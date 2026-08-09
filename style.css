@@ -454,8 +454,7 @@
   }
 
   .settings-tab.active,
-  .settings-button:hover,
-  .settings-primary {
+  .settings-button:hover {
       background: var(--base-foreground);
       color: var(--base-background);
       opacity: 1;
@@ -657,7 +656,8 @@
   }
 
   .settings-text-row textarea {
-      min-height: 4.5rem;
+      height: calc(0.9rem * 1.35 + 1.3rem);
+      min-height: calc(0.9rem * 1.35 + 1.3rem);
   }
 
   .settings-row-actions,
@@ -716,7 +716,6 @@
 
   @media (max-width: 900px) {
       .settings-footer {
-          align-items: stretch;
-          flex-direction: column;
+          gap: 0.5rem;
       }
   }
